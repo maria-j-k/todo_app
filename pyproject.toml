@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "todo-app"
+version = "0.1.0"
+description = ""
+authors = ["Maria Kowalska <maria.j.kowalska@onet.pl>"]
+readme = "README.md"
+packages = [{include = "todo_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.1"
+uvicorn = "^0.21.1"
+motor = "^3.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
