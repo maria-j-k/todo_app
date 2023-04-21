@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from beanie import PydanticObjectId
 from pydantic import BaseModel, Field
@@ -27,5 +27,5 @@ class TaskUpdate(BaseModel):
     status: Optional[TaskStatus]
 
 
-class Response(BaseModel):
-    content: Any
+class ErrorMessage(BaseModel):
+    message: str
