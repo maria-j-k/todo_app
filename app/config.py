@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     secret_key: str
     access_token_expires: int = 60 * 24
     refresh_token_expires: int = 60 * 24 * 7
+    email_token_expires: int = 20  # TODO make 15
     algorithm = "HS256"
     google_client_id: str
     google_client_secret: str

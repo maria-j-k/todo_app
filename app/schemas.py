@@ -3,7 +3,7 @@ from typing import Callable, Dict, Generator, Optional
 from beanie import PydanticObjectId
 from pydantic import BaseModel, EmailStr, Field
 
-from app.models.enums import TaskStatus
+from app.models.consts import TaskStatus
 
 
 class CustomEmailStr(str):
@@ -12,7 +12,7 @@ class CustomEmailStr(str):
         yield cls.validate
 
     @classmethod
-    def validate(cls, value: Dict):
+    def validate(cls, value: Dict) -> EmailStr:
         return EmailStr(value["email"])
 
 
@@ -63,6 +63,14 @@ class UserRead(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class NewPassword(BaseModel):
+    password: str
 
 
 class ErrorMessage(BaseModel):

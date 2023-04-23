@@ -3,9 +3,10 @@ from fastapi import APIRouter, Request
 from starlette.config import Config
 from starlette.responses import RedirectResponse
 
-from app.auth_utils import create_access_token, create_refresh_token
+from app.auth_utils import create_token
 from app.config import settings
 from app.crud.user import create_social_user, get_user_by_email
+from app.models.consts import TokenTypes
 from app.schemas import TokenSchema
 
 router = APIRouter(prefix="/social_auth")
@@ -43,8 +44,8 @@ async def auth(request: Request):
             email=user_data["email"], iss=user_data["iss"], sub=user_data["sub"]
         )
     tokens = TokenSchema(
-        access_token=create_access_token(user.id),
-        refresh_token=create_refresh_token(user.id),
+        access_token=create_token(token_type=TokenTypes.ACCESS, subject=user.id),
+        refresh_token=create_token(token_type=TokenTypes.REFRESH, subject=user.id),
     )
 
     return tokens

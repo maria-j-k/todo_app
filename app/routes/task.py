@@ -18,10 +18,8 @@ router = APIRouter(
 async def create_task(
     payload: TaskCreate, current_user: User = Depends(get_current_user)
 ) -> TaskRead:
-    new_task = await crud_task.create_task(payload, current_user)
-    task = new_task.dict(exclude_none=True, exclude={"user"})
-    user = new_task.user.email
-    return TaskRead(user=user, **task)
+    task = await crud_task.create_task(payload, current_user)
+    return task
 
 
 @router.get("/", response_model=List[TaskRead])

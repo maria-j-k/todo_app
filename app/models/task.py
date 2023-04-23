@@ -6,7 +6,7 @@ from typing import Optional
 from beanie import Document, Indexed, Link
 from pydantic import Field
 
-from app.models.enums import TaskStatus
+from app.models.consts import TaskStatus
 from app.models.user import User
 
 

@@ -1,9 +1,7 @@
-import secrets
-
 from fastapi import HTTPException, status
 from pydantic import AnyUrl, EmailStr
 
-from app.auth_utils import get_hashed_password
+from app.auth_utils import generate_temporary_password, get_hashed_password
 from app.models import ExternalIdentifier, User
 from app.schemas import UserAuth
 
@@ -32,7 +30,7 @@ async def get_user_by_email(email: EmailStr) -> User:
 async def create_social_user(email: EmailStr, iss: AnyUrl, sub: str) -> User:
     new_user = User(
         email=email,
-        hashed_password=secrets.token_urlsafe(15),
+        hashed_password=get_hashed_password(generate_temporary_password()),
         external_identifier=ExternalIdentifier(iss=iss, sub=sub),
     )
     user = await new_user.insert()

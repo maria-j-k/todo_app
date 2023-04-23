@@ -28,12 +28,12 @@ async def retrieve_tasks(
 
 async def retrieve_task(id: PydanticObjectId, user_id: PydanticObjectId) -> Task:
     task = await Task.get(id, fetch_links=True)
-    if task.user.id != user_id:
-        task = None
     if not task:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
         )
+    if task.user.id != user_id:
+        task = None
     return task
 
 
