@@ -1,14 +1,13 @@
+from __future__ import annotations
+
 from datetime import datetime
-from enum import Enum
 from typing import Optional
 
-from beanie import Document, Indexed
+from beanie import Document, Indexed, Link
 from pydantic import Field
 
-
-class TaskStatus(str, Enum):
-    COMPLETED = "done"
-    NOT_COMPLETED = "to_do"
+from app.models.enums import TaskStatus
+from app.models.user import User
 
 
 class Task(Document):
@@ -16,3 +15,4 @@ class Task(Document):
     description: str
     status: Optional[TaskStatus] = TaskStatus.NOT_COMPLETED
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    user: Link[User]

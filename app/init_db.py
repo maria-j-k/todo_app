@@ -1,11 +1,10 @@
-import os
-
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from app.models import Task
+from app.config import settings
+from app.models import Task, User
 
 
 async def init_db() -> None:
-    client = AsyncIOMotorClient(os.environ["MONGODB_URL"])
-    await init_beanie(database=client.ToDo, document_models=[Task])
+    client = AsyncIOMotorClient(settings.mongodb_url)
+    await init_beanie(database=client.ToDo, document_models=[Task, User])

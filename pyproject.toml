@@ -12,6 +12,14 @@ fastapi = "^0.95.1"
 uvicorn = "^0.21.1"
 motor = "^3.1.2"
 beanie = "^1.18.0"
+pydantic = {extras = ["email"], version = "^1.10.7"}
+passlib = "^1.7.4"
+python-jose = {version = "^3.3.0", extras = ["cryptography"]}
+python-dotenv = "^1.0.0"
+python-multipart = "^0.0.6"
+authlib = "^1.2.0"
+itsdangerous = "^2.1.2"
+httpx = "^0.24.0"
 
 
 [tool.poetry.group.dev.dependencies]
