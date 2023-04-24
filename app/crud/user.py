@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 from pydantic import AnyUrl, EmailStr
 
-from app.auth_utils import generate_temporary_password, get_hashed_password
 from app.models import ExternalIdentifier, User
 from app.schemas import UserAuth
+from app.utils.auth_utils import generate_temporary_password, get_hashed_password
 
 
 async def create_regular_user(user_data: UserAuth) -> User:

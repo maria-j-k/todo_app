@@ -4,7 +4,7 @@ from typing import Optional
 from beanie import Document, Indexed
 from pydantic import AnyUrl, BaseModel, EmailStr, Field
 
-from app.auth_utils import verify_password
+from app.utils.auth_utils import verify_password
 
 
 class ExternalIdentifier(BaseModel):

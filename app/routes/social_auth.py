@@ -3,11 +3,11 @@ from fastapi import APIRouter, Request
 from starlette.config import Config
 from starlette.responses import RedirectResponse
 
-from app.auth_utils import create_token
 from app.config import settings
 from app.crud.user import create_social_user, get_user_by_email
 from app.models.consts import TokenTypes
 from app.schemas import TokenSchema
+from app.utils.auth_utils import create_token
 
 router = APIRouter(prefix="/social_auth")
 

@@ -34,3 +34,5 @@ repos:
       - id: mypy
         exclude: ^docs|tests
         language_version: python3
+        additional_dependencies:
+          - "types-requests"
