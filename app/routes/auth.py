@@ -39,8 +39,13 @@ async def login(
 ) -> TokenSchema:
     email = EmailStr(form_data.username)
     user = await crud_user.get_user_by_email(email=email)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
     authenticated = await user.authenticate(email=email, password=form_data.password)
-    if not user or not authenticated:
+    if not authenticated:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Authentication failed",

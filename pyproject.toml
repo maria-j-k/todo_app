@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Maria Kowalska <maria.j.kowalska@onet.pl>"]
 readme = "README.md"
-packages = [{include = "todo_app"}]
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
