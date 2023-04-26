@@ -1,9 +1,10 @@
 from typing import Callable, Dict, Generator, Optional
 
 from beanie import PydanticObjectId
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, validator
 
 from app.models.consts import TaskStatus
+from app.utils.validators import password_is_valid
 
 
 class CustomEmailStr(str):
@@ -55,6 +56,12 @@ class TokenPayload(BaseModel):
 class UserAuth(BaseModel):
     email: EmailStr
     password: str
+
+    @validator("password")
+    def valid_password(cls, v):
+        if not password_is_valid(v):
+            raise ValueError("Password is too weak")
+        return v
 
 
 class UserRead(BaseModel):

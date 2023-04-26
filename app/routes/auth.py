@@ -1,20 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import EmailStr
+from typing import cast
 
-from app.auth_utils import create_token, get_hashed_password
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import AnyUrl, EmailStr
+
 from app.crud import user as crud_user
 from app.deps import get_current_user_form_refresh_token, get_user_from_email_token
 from app.models import User
 from app.models.consts import TokenTypes
 from app.schemas import (
-    AuthToken,
     ErrorMessage,
     NewPassword,
     PasswordResetRequest,
     TokenSchema,
     UserAuth,
 )
+from app.utils.auth_utils import create_token, get_hashed_password
+from app.utils.mail_utils import send_message
 
 router = APIRouter(
     prefix="/auth",
@@ -37,8 +39,13 @@ async def login(
 ) -> TokenSchema:
     email = EmailStr(form_data.username)
     user = await crud_user.get_user_by_email(email=email)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
     authenticated = await user.authenticate(email=email, password=form_data.password)
-    if not user or not authenticated:
+    if not authenticated:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Authentication failed",
@@ -67,25 +74,39 @@ async def refresh_token(
     return tokens
 
 
-@router.post("/reset_request")
-async def reset_password_request(payload: PasswordResetRequest) -> AuthToken:
-    """w body email
-    w response
-        - na razie: tymczasowe hasło
-        - docelowo -nic, wysłanie maila"""
+@router.post("/reset_request", status_code=status.HTTP_204_NO_CONTENT)
+async def reset_password_request(
+    payload: PasswordResetRequest, request: Request
+) -> None:
     user = await crud_user.get_user_by_email(email=payload.email)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-    return create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
+    token = create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
+    url = f'{request.url_for("reset_password")}/?token={token.token}'
+    # breakpoint()
+    await send_message(email=user.email, url=cast(AnyUrl, url))
+    return status.HTTP_204_NO_CONTENT
+
+
+# @router.post("/reset_request")
+# async def reset_password_request(payload: PasswordResetRequest) -> AuthToken:
+#     user = await crud_user.get_user_by_email(email=payload.email)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     send_message("maria77julia@gmail.com")
+#     return create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
 
 
 @router.post("/password_reset", status_code=status.HTTP_204_NO_CONTENT)
 async def reset_password(
     new_password: NewPassword, current_user: User = Depends(get_user_from_email_token)
-):
+) -> None:
     current_user.hashed_password = get_hashed_password(new_password.password)
     await current_user.save()
     return status.HTTP_204_NO_CONTENT

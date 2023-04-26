@@ -6,7 +6,8 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-client_secret*
+token.json
+credentials.json
 notes.txt
 .idea/**/workspace.xml
 .idea/**/tasks.xml
