@@ -45,6 +45,7 @@ async def send_message(email: EmailStr, url: AnyUrl):
     message["to"] = email
     message["subject"] = "Password recovery request"
     create_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
     try:
         message = (
             service.users().messages().send(userId="me", body=create_message).execute()

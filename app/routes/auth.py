@@ -86,21 +86,8 @@ async def reset_password_request(
         )
     token = create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
     url = f'{request.url_for("reset_password")}/?token={token.token}'
-    # breakpoint()
     await send_message(email=user.email, url=cast(AnyUrl, url))
     return status.HTTP_204_NO_CONTENT
-
-
-# @router.post("/reset_request")
-# async def reset_password_request(payload: PasswordResetRequest) -> AuthToken:
-#     user = await crud_user.get_user_by_email(email=payload.email)
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     send_message("maria77julia@gmail.com")
-#     return create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
 
 
 @router.post("/password_reset", status_code=status.HTTP_204_NO_CONTENT)

@@ -6,5 +6,5 @@ from app.models import Task, User
 
 
 async def init_db() -> None:
-    client = AsyncIOMotorClient(settings.mongodb_url)
+    client = AsyncIOMotorClient(settings.mongo_url)
     await init_beanie(database=client.ToDo, document_models=[Task, User])
