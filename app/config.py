@@ -42,8 +42,11 @@ def get_config(environment):
     if environment == "dev" or not environment:
         config = DevSettings(mongo_url=os.environ.get("MONGODB_URL"))
         return config
-    elif environment == "test":
+    if environment == "test":
         config = TestSettings(mongo_url=os.environ.get("MONGO_TEST_DB_URL"))
+        return config
+    if environment == "docker":
+        config = DevSettings(mongo_url=os.environ.get("MONGO_DOCKER_URL"))
         return config
     raise ValidationError("Improper environment value")
 
