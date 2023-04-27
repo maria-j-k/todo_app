@@ -14,8 +14,7 @@ class ExternalIdentifier(BaseModel):
 
 class User(Document):
     email: Indexed(EmailStr, unique=True)  # type: ignore[valid-type]
-    hashed_password: str  # TODO password validator
-    temporary_password_creation_datetime: Optional[datetime]
+    hashed_password: str
     external_identifier: Optional[ExternalIdentifier]
     is_active: bool = True
     is_superuser: bool = False
