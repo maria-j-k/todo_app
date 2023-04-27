@@ -79,6 +79,12 @@ class PasswordResetRequest(BaseModel):
 class NewPassword(BaseModel):
     password: str
 
+    @validator("password")
+    def valid_password(cls, v):
+        if not password_is_valid(v):
+            raise ValueError("Password is too weak")
+        return v
+
 
 class ErrorMessage(BaseModel):
     message: str
