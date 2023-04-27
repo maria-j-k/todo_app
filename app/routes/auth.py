@@ -86,8 +86,10 @@ async def reset_password_request(
         )
     token = create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
     url = f'{request.url_for("reset_password")}/?token={token.token}'
+
     await send_message(email=user.email, url=cast(AnyUrl, url))
     return status.HTTP_204_NO_CONTENT
+
 
 
 @router.post("/password_reset", status_code=status.HTTP_204_NO_CONTENT)

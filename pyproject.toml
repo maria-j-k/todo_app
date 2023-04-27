@@ -25,7 +25,6 @@ google-auth-oauthlib = "^1.0.0"
 google-auth-httplib2 = "^0.1.0"
 google-api-python-client = "^2.86.0"
 types-requests = "^2.28.11.17"
-pytest-cov = "^4.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -35,6 +34,7 @@ pytest-aiohttp = "^1.0.4"
 pytest-asyncio = "^0.21.0"
 pytest-mock = "^3.10.0"
 pytest-env = "^0.8.1"
+pytest-cov = "^4.0.0"
 
 [build-system]
 requires = ["poetry-core"]
