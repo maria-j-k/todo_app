@@ -1,10 +1,13 @@
-from pydantic import BaseSettings, MongoDsn
+import os
+
+from dotenv import load_dotenv
+from pydantic import BaseSettings, MongoDsn, ValidationError
 
 MongoDsn.allowed_schemes.add("mongodb+srv")
 
 
-class Settings(BaseSettings):
-    mongodb_url: MongoDsn
+class BaseAppSettings(BaseSettings):
+    base_url: str = "http://127.0.0.1:8000"
     secret_key_access: str
     secret_key_refresh: str
     secret_key: str
@@ -19,4 +22,30 @@ class Settings(BaseSettings):
         env_file = ".env"
 
 
-settings = Settings()
+class DevSettings(BaseAppSettings):
+    mongo_url: MongoDsn
+    mongo_db_name: str = "to-do"
+
+
+class TestSettings(BaseAppSettings):
+    mongo_url: MongoDsn
+    mongo_db_name: str = "test"
+
+
+def get_settings():
+    load_dotenv()
+    environment = os.environ.get("ENVIRONMENT")
+    return get_config(environment)
+
+
+def get_config(environment):
+    if environment == "dev" or not environment:
+        config = DevSettings(mongo_url=os.environ.get("MONGODB_URL"))
+        return config
+    elif environment == "test":
+        config = TestSettings(mongo_url=os.environ.get("MONGO_TEST_DB_URL"))
+        return config
+    raise ValidationError("Improper environment value")
+
+
+settings = get_settings()
