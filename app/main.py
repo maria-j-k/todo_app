@@ -21,9 +21,3 @@ app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 @app.on_event("startup")
 async def on_startup() -> None:
     await init_db()
-
-
-@app.get("/url-list")
-def get_all_urls():
-    url_list = [{"path": route.path, "name": route.name} for route in app.routes]
-    return url_list

@@ -50,20 +50,17 @@ async def login(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Authentication failed",
         )
-
-    tokens = TokenSchema(
+    return TokenSchema(
         access_token=create_token(token_type=TokenTypes.ACCESS, subject=user.id),
         refresh_token=create_token(token_type=TokenTypes.REFRESH, subject=user.id),
     )
-
-    return tokens
 
 
 @router.post("/refresh", response_model=TokenSchema)
 async def refresh_token(
     current_user: User = Depends(get_current_user_form_refresh_token),
 ) -> TokenSchema:
-    tokens = TokenSchema(
+    return TokenSchema(
         access_token=create_token(
             token_type=TokenTypes.ACCESS, subject=current_user.id
         ),
@@ -71,7 +68,6 @@ async def refresh_token(
             token_type=TokenTypes.REFRESH, subject=current_user.id
         ),
     )
-    return tokens
 
 
 @router.post("/reset_request", status_code=status.HTTP_204_NO_CONTENT)
@@ -85,11 +81,10 @@ async def reset_password_request(
             detail="User not found",
         )
     token = create_token(token_type=TokenTypes.EMAIL, subject=payload.email)
-    url = f'{request.url_for("reset_password")}/?token={token.token}'
+    url = f'{request.url_for("reset_password")}/?token={token}'
 
     await send_message(email=user.email, url=cast(AnyUrl, url))
     return status.HTTP_204_NO_CONTENT
-
 
 
 @router.post("/password_reset", status_code=status.HTTP_204_NO_CONTENT)

@@ -43,9 +43,7 @@ async def auth(request: Request):
         user = await create_social_user(
             email=user_data["email"], iss=user_data["iss"], sub=user_data["sub"]
         )
-    tokens = TokenSchema(
+    return TokenSchema(
         access_token=create_token(token_type=TokenTypes.ACCESS, subject=user.id),
         refresh_token=create_token(token_type=TokenTypes.REFRESH, subject=user.id),
     )
-
-    return tokens

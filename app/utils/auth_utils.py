@@ -7,7 +7,6 @@ from passlib.context import CryptContext
 
 from app.config import settings
 from app.models.consts import TOKEN_MAP, TokenTypes
-from app.schemas import AuthToken
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -24,7 +23,7 @@ def create_token(
     token_type: TokenTypes,
     subject: Union[str, Any],
     expires_delta: Optional[timedelta] = None,
-) -> AuthToken:
+) -> str:
     token_settings = TOKEN_MAP[token_type]
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -36,10 +35,8 @@ def create_token(
         "exp": expire,
         "sub": str(subject),
     }
-    access_token = jwt.encode(
-        payload, token_settings["secret"], algorithm=settings.algorithm
-    )
-    return AuthToken(token=access_token)
+    token = jwt.encode(payload, token_settings["secret"], algorithm=settings.algorithm)
+    return token
 
 
 def generate_temporary_password():

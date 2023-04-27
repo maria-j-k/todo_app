@@ -39,14 +39,10 @@ class TaskUpdate(BaseModel):
     status: Optional[TaskStatus]
 
 
-class AuthToken(BaseModel):
-    token: str
-    token_type: str = "Bearer"
-
-
 class TokenSchema(BaseModel):
-    access_token: AuthToken
-    refresh_token: AuthToken
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
 
 
 class TokenPayload(BaseModel):
