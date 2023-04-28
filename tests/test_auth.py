@@ -31,8 +31,7 @@ async def test_login(api_client) -> None:
     assert response.status_code == 200
     assert "access_token" in response.json()
     assert "refresh_token" in response.json()
-    assert response.json()["access_token"]["token_type"] == "Bearer"
-    assert response.json()["refresh_token"]["token_type"] == "Bearer"
+    assert response.json()["token_type"] == "bearer"
 
 
 @pytest.mark.asyncio
