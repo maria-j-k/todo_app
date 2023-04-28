@@ -21,3 +21,8 @@ app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 @app.on_event("startup")
 async def on_startup() -> None:
     await init_db()
+
+
+@app.get("/healthcheck")
+def service_healthy():
+    return {"status": "ok"}
