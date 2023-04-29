@@ -44,7 +44,7 @@ mailing functionality (needed for password reset)
 
 ## Features to implement
 
-1. Enable the use of Google login in Swagger
+1. Enable Google login in Swagger
 2. Enable email sending on production
 3. Add superuser and the admins views
 4. Add logging
