@@ -27,6 +27,12 @@ class DevSettings(BaseAppSettings):
     mongo_db_name: str = "to-do"
 
 
+class ProdSettings(BaseAppSettings):
+    mongo_url: MongoDsn
+    mongo_db_name: str = "mongo-fastapi-to-do"
+    base_url = "https://coral-app-rmdjl.ondigitalocean.app"
+
+
 class TestSettings(BaseAppSettings):
     mongo_url: MongoDsn
     mongo_db_name: str = "test"
@@ -41,6 +47,9 @@ def get_settings():
 def get_config(environment):
     if environment == "dev" or not environment:
         config = DevSettings(mongo_url=os.environ.get("MONGODB_URL"))
+        return config
+    if environment == "prod":
+        config = ProdSettings(mongo_url=os.environ.get("MONGO_URL"))
         return config
     if environment == "test":
         config = TestSettings(mongo_url=os.environ.get("MONGO_TEST_DB_URL"))

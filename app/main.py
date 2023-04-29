@@ -26,3 +26,13 @@ async def on_startup() -> None:
 @app.get("/healthcheck")
 def service_healthy():
     return {"status": "ok"}
+
+
+@app.get("/")
+def root():
+    return {
+        "social_auth": f"{settings.base_url}{social_router.url_path_for('login')}",
+        "json_schema": f"{settings.base_url}{app.openapi_url}",
+        "swagger": f"{settings.base_url}{app.docs_url}",
+        "redoc": f"{settings.base_url}{app.redoc_url}",
+    }

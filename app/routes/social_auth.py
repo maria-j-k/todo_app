@@ -9,7 +9,7 @@ from app.models.consts import TokenTypes
 from app.schemas import TokenSchema
 from app.utils.auth_utils import create_token
 
-router = APIRouter(prefix="/social_auth")
+router = APIRouter(prefix="/social_auth", include_in_schema=False)
 
 
 config_data = {
