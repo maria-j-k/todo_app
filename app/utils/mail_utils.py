@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from email.mime.text import MIMEText
 
@@ -24,6 +25,25 @@ Kind regards,
     ToDo app team
 """
 
+json_data = {
+    "web": {
+        "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
+        "project_id": os.environ.get("PROJECT_ID"),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+        "redirect_uris": [f"{settings.base_url}/social_auth/auth"],
+    }
+}
+
+
+async def write_creds_to_json():
+    if os.path.exists("credentials.json"):
+        return
+    with open("credentials.json", "w") as f:
+        json.dump(json_data, f)
+
 
 async def send_message(email: EmailStr, url: AnyUrl):
     creds = None
@@ -34,7 +54,8 @@ async def send_message(email: EmailStr, url: AnyUrl):
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=33287)
+            flow.redirect_uri = f"{settings.base_url}/social_auth/auth/"
+            creds = flow.run_local_server(port=8000)
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 

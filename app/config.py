@@ -5,9 +5,12 @@ from pydantic import BaseSettings, MongoDsn, ValidationError
 
 MongoDsn.allowed_schemes.add("mongodb+srv")
 
+LOCAL_URL = "http://127.0.0.1:8000"
+LIVE_URL = "https://oyster-app-9p595.ondigitalocean.app"
+
 
 class BaseAppSettings(BaseSettings):
-    base_url: str = "http://127.0.0.1:8000"
+    base_url: str = LOCAL_URL
     secret_key_access: str
     secret_key_refresh: str
     secret_key: str
@@ -27,6 +30,12 @@ class DevSettings(BaseAppSettings):
     mongo_db_name: str = "to-do"
 
 
+class ProdSettings(BaseAppSettings):
+    mongo_url: MongoDsn
+    mongo_db_name: str = "mongo-fastapi-to-do"
+    base_url = LIVE_URL
+
+
 class TestSettings(BaseAppSettings):
     mongo_url: MongoDsn
     mongo_db_name: str = "test"
@@ -41,6 +50,9 @@ def get_settings():
 def get_config(environment):
     if environment == "dev" or not environment:
         config = DevSettings(mongo_url=os.environ.get("MONGODB_URL"))
+        return config
+    if environment == "prod":
+        config = ProdSettings(mongo_url=os.environ.get("MONGO_URL"))
         return config
     if environment == "test":
         config = TestSettings(mongo_url=os.environ.get("MONGO_TEST_DB_URL"))

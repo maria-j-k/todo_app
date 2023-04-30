@@ -88,9 +88,9 @@ async def reset_password_request(
 
 
 @router.post("/password_reset", status_code=status.HTTP_204_NO_CONTENT)
-async def reset_password(
-    new_password: NewPassword, current_user: User = Depends(get_user_from_email_token)
-) -> None:
-    current_user.hashed_password = get_hashed_password(new_password.password)
-    await current_user.save()
+async def reset_password(new_password: NewPassword, token: str) -> None:
+    current_user = await get_user_from_email_token(token)
+    await current_user.set(
+        {User.hashed_password: get_hashed_password(new_password.password)}
+    )
     return status.HTTP_204_NO_CONTENT
