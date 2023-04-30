@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, status
-from pydantic import EmailStr
 
 from app.deps import get_current_user
 from app.models import User
@@ -17,6 +16,6 @@ async def get_self(current_user: User = Depends(get_current_user)) -> UserRead:
 
 
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(email: EmailStr, current_user: User = Depends(get_current_user)):
+async def delete_user(current_user: User = Depends(get_current_user)):
     await current_user.delete()
     return status.HTTP_204_NO_CONTENT

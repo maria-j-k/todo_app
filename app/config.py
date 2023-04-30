@@ -5,10 +5,12 @@ from pydantic import BaseSettings, MongoDsn, ValidationError
 
 MongoDsn.allowed_schemes.add("mongodb+srv")
 
+LOCAL_URL = "http://127.0.0.1:8000"
+LIVE_URL = "https://oyster-app-9p595.ondigitalocean.app"
+
 
 class BaseAppSettings(BaseSettings):
-    base_url: str = "http://127.0.0.1:8000"
-    google_redirect_uri: str = "http://localhost:8000/social_auth/auth"
+    base_url: str = LOCAL_URL
     secret_key_access: str
     secret_key_refresh: str
     secret_key: str
@@ -31,7 +33,7 @@ class DevSettings(BaseAppSettings):
 class ProdSettings(BaseAppSettings):
     mongo_url: MongoDsn
     mongo_db_name: str = "mongo-fastapi-to-do"
-    base_url = "https://coral-app-rmdjl.ondigitalocean.app"
+    base_url = LIVE_URL
 
 
 class TestSettings(BaseAppSettings):
@@ -51,9 +53,6 @@ def get_config(environment):
         return config
     if environment == "prod":
         config = ProdSettings(mongo_url=os.environ.get("MONGO_URL"))
-        config.google_redirect_uri = (
-            "http://coral-app-rmdjl.ondigitalocean.app/social_auth/auth"
-        )
         return config
     if environment == "test":
         config = TestSettings(mongo_url=os.environ.get("MONGO_TEST_DB_URL"))

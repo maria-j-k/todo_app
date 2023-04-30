@@ -33,7 +33,7 @@ json_data = {
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
-        "redirect_uris": [settings.google_redirect_uri],
+        "redirect_uris": [f"{settings.base_url}/social_auth/auth"],
     }
 }
 
@@ -54,7 +54,8 @@ async def send_message(email: EmailStr, url: AnyUrl):
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=33287)
+            flow.redirect_uri = f"{settings.base_url}/social_auth/auth/"
+            creds = flow.run_local_server(port=8000)
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
@@ -73,6 +74,3 @@ async def send_message(email: EmailStr, url: AnyUrl):
         print(f'Sent message to {message}. Message Id: {message["id"]}')
     except HTTPError as error:
         raise HTTPException(detail=error)
-
-
-# "http://coral-app-rmdjl.ondigitalocean.app/social_auth/auth"

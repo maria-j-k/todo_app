@@ -1,7 +1,7 @@
 # todo_app
 
 ToDo application created with FastAPI and MongoDB.
-https://coral-app-rmdjl.ondigitalocean.app
+https://oyster-app-9p595.ondigitalocean.app/
 
 
 NOTES:
