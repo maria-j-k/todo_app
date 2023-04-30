@@ -55,7 +55,7 @@ async def send_message(email: EmailStr, url: AnyUrl):
         else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             flow.redirect_uri = f"{settings.base_url}/social_auth/auth/"
-            creds = flow.run_local_server(port=8000)
+            creds = flow.run_local_server(port=8080)
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
